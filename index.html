@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contrôle LED MQTT</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+</head>
+<body>
+    <h1>Contrôle LED via MQTT</h1>
+    <button onclick="sendMQTT('ON')">Allumer</button>
+    <button onclick="sendMQTT('OFF')">Eteindre</button>
+
+    <script>
+        // Connexion au broker HiveMQ (via WebSocket)
+        client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "web_client");
+        client.connect({onSuccess: () => console.log("Connecté au broker")});
+
+        function sendMQTT(command) {
+            message = new Paho.MQTT.Message(command);
+            message.destinationName = "emsi/led_control";
+            client.send(message);
+        }
+    </script>
+</body>
+</html>

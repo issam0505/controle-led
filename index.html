@@ -9,16 +9,22 @@
     <button onclick="sendMQTT('ON')">Allumer</button>
     <button onclick="sendMQTT('OFF')">Eteindre</button>
 
-    <script>
-        // Connexion au broker HiveMQ (via WebSocket)
-        client = new Paho.MQTT.Client("broker.hivemq.com", 8000, "web_client");
-        client.connect({onSuccess: () => console.log("Connecté au broker")});
+   <script>
+    // Configuration pour mqtt-dashboard.com
+    client = new Paho.MQTT.Client("mqtt-dashboard.com", 8884, "web_client_iss");
+    
+    // Paramètres de connexion SSL
+    client.connect({
+        onSuccess: () => console.log("Connecté au broker SSL"),
+        useSSL: true, // Très important pour le port 8884
+        onFailure: (err) => console.log("Erreur de connexion : ", err)
+    });
 
-        function sendMQTT(command) {
-            message = new Paho.MQTT.Message(command);
-            message.destinationName = "emsi/led_control";
-            client.send(message);
-        }
-    </script>
+    function sendMQTT(command) {
+        message = new Paho.MQTT.Message(command);
+        message.destinationName = "emsi/led_control";
+        client.send(message);
+    }
+</script>
 </body>
 </html>
